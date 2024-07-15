@@ -2,6 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
+from datetime import timedelta
 from config import Config
 
 bcrypt = Bcrypt()
@@ -10,6 +11,8 @@ jwt = JWTManager()
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    
+    # JWT configuration
     app.config['JWT_SECRET_KEY'] = 'your-secret-key'  # Make sure this matches the key used for encoding
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=1)  # Adjust as needed
 
@@ -24,10 +27,10 @@ def create_app(config_class=Config):
     bcrypt.init_app(app)
     jwt.init_app(app)
 
-    from app.routes import init_app as init_routes
+    from .routes import init_app as init_routes
     init_routes(app)
 
-    from app.utils.jwt_utils import unauthorized_response, invalid_token_response
+    from .utils.jwt_utils import unauthorized_response, invalid_token_response
     jwt.unauthorized_loader(unauthorized_response)
     jwt.invalid_token_loader(invalid_token_response)
 
