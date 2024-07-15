@@ -19,36 +19,36 @@ const SentimentForm: React.FC<SentimentFormProps> = ({
   const analyzeSentiment = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
+    setError('');
     try {
-      console.log("Sending request with token:", token); // Debug log
+      console.log('Sending request with token:', token);
       const response = await axios.post<AnalysisResult>(
-        "http://localhost:5000/analyze",
+        'http://localhost:5000/sentiment/analyze',
         { text },
-        {
-          headers: {
+        { 
+          headers: { 
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json'
           },
+          withCredentials: true
         }
       );
-      console.log("Received response:", response.data); // Debug log
+      console.log('Received response:', response.data);
       setResult(response.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error("Axios error:", error.response?.data); // Debug log
+        console.error('Axios error:', error.response?.data);
         if (error.response?.status === 401) {
-          setError("Authentication failed. Please log in again.");
+          setError('Authentication failed. Please log in again.');
+          // Optionally, clear the token and redirect to login
+          localStorage.removeItem('token');
+          // Redirect to login page
         } else {
-          setError(
-            `Failed to analyze sentiment: ${
-              error.response?.data.message || error.message
-            }`
-          );
+          setError(`Failed to analyze sentiment: ${error.response?.data?.message || error.message}`);
         }
       } else {
-        console.error("Unexpected error:", error); // Debug log
-        setError("An unexpected error occurred");
+        console.error('Unexpected error:', error);
+        setError('An unexpected error occurred');
       }
     } finally {
       setIsLoading(false);

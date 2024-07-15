@@ -31,6 +31,12 @@ const App: React.FC = () => {
     }
   }, [token]);
 
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    console.log('Stored token:', storedToken);
+    setToken(storedToken);
+  }, []);
+
   const handleLogout = () => {
     setToken(null);
   };

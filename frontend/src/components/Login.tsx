@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -18,7 +17,10 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
         username,
         password,
       });
-      setToken(response.data.access_token);
+      const token = response.data.access_token;
+      localStorage.setItem("token", token);
+      setToken(token);
+      console.log("Token received and stored:", token);
       setMessage("Login successful");
     } catch (error) {
       setMessage("Login failed");
