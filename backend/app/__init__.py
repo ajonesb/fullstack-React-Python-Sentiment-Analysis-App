@@ -18,7 +18,7 @@ def create_app(config_class=Config):
 
     # Update CORS configuration
     CORS(app, resources={r"/*": {
-        "origins": "http://localhost:3000",  # Your React app's URL
+        "origins": ["http://localhost:3000"],  # Your React app's URL
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
         "supports_credentials": True
@@ -29,9 +29,5 @@ def create_app(config_class=Config):
 
     from .routes import init_app as init_routes
     init_routes(app)
-
-    from .utils.jwt_utils import unauthorized_response, invalid_token_response
-    jwt.unauthorized_loader(unauthorized_response)
-    jwt.invalid_token_loader(invalid_token_response)
 
     return app

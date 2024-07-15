@@ -10,10 +10,13 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/register", {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/auth/register",
+        { username, password },
+        {
+          withCredentials: true,
+        }
+      );
       setMessage(response.data.msg);
     } catch (error) {
       setMessage("Registration failed");

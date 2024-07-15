@@ -1,12 +1,17 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token
+from flask_cors import cross_origin
 from app import bcrypt
 from app.models.user import User
 
 bp = Blueprint('auth', __name__)
 
-@bp.route('/register', methods=['POST'])
+@bp.route('/register', methods=['POST', 'OPTIONS'])
+@cross_origin(supports_credentials=True)
 def register():
+    if request.method == 'OPTIONS':
+        return jsonify({}), 200
+
     username = request.json.get('username', None)
     password = request.json.get('password', None)
     if not username or not password:
@@ -17,8 +22,12 @@ def register():
     User.create(username, hashed_password)
     return jsonify({"msg": "User created successfully"}), 201
 
-@bp.route('/login', methods=['POST'])
+@bp.route('/login', methods=['POST', 'OPTIONS'])
+@cross_origin(supports_credentials=True)
 def login():
+    if request.method == 'OPTIONS':
+        return jsonify({}), 200
+
     username = request.json.get('username', None)
     password = request.json.get('password', None)
     if not username or not password:

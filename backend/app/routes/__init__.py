@@ -1,6 +1,6 @@
 from flask import Blueprint
-from app.routes.auth import bp as auth_bp
-from app.routes.sentiment import bp as sentiment_bp
+from .auth import bp as auth_bp
+from .sentiment import bp as sentiment_bp
 
 bp = Blueprint('main', __name__)
 

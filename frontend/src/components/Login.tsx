@@ -13,10 +13,13 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/login", {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/auth/login",
+        { username, password },
+        {
+          withCredentials: true,
+        }
+      );
       const token = response.data.access_token;
       localStorage.setItem("token", token);
       setToken(token);
