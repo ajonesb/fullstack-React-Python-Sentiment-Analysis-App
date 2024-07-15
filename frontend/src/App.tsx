@@ -1,11 +1,39 @@
-import React, { useState } from "react";
-import { AnalysisResult } from "./types";
-import SentimentResult from "./components/SentimentResult";
+import React, { useState, useEffect } from "react";
 import SentimentForm from "./components/SentimentForm";
+import SentimentResult from "./components/SentimentResult";
+import Register from "./components/Register";
+import Login from "./components/Login";
+import { AnalysisResult } from "./types";
+import { jwtDecode } from "jwt-decode";
 
 const App: React.FC = () => {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string>("");
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
+  );
+  const [username, setUsername] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem("token", token);
+      try {
+        const decoded = jwtDecode<{ sub: string }>(token);
+        setUsername(decoded.sub);
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        setToken(null);
+        setUsername(null);
+      }
+    } else {
+      localStorage.removeItem("token");
+      setUsername(null);
+    }
+  }, [token]);
+
+  const handleLogout = () => {
+    setToken(null);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
@@ -16,9 +44,29 @@ const App: React.FC = () => {
             <h1 className="text-2xl font-semibold mb-6 text-center">
               Sentiment Analysis
             </h1>
-            <SentimentForm setResult={setResult} setError={setError} />
-            {error && <p className="mt-4 text-red-500">{error}</p>}
-            {result && <SentimentResult result={result} />}
+            {username ? (
+              <>
+                <p className="mb-4">Welcome, {username}!</p>
+                <SentimentForm
+                  setResult={setResult}
+                  setError={setError}
+                  token={token}
+                />
+                {error && <p className="mt-4 text-red-500">{error}</p>}
+                {result && <SentimentResult result={result} />}
+                <button
+                  onClick={handleLogout}
+                  className="mt-4 w-full px-3 py-2 text-white bg-red-500 rounded"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <div className="space-y-6">
+                <Register />
+                <Login setToken={setToken} />
+              </div>
+            )}
           </div>
         </div>
       </div>
