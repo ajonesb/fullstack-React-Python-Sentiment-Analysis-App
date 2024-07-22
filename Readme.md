@@ -104,7 +104,7 @@ The backend is built with Python using the Flask framework and TextBlob for sent
 From the `backend` directory, run:
 
 ```
-python app.py
+python run.py
 ```
 
 The server will start on `http://localhost:5000`.
@@ -151,7 +151,7 @@ npm test
 
 ## Future Improvements
 
-- Implement user authentication
+- Implement user authentication  - DONE
 - Add support for analyzing multiple texts at once
 - Integrate with social media APIs for real-time sentiment analysis
 - Improve sentiment analysis accuracy with machine learning models
